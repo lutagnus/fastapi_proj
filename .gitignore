@@ -1,4 +1,5 @@
 venv
-tasks.db
+events.db
+events
 .idea
 __pycache__
