@@ -7,16 +7,16 @@ router = APIRouter(
     tags=["Мероприятия"],
 )
 
-@router.post("/events/", response_model=STask)
+@router.post("/api/events/", response_model=STask)
 async def create_event(event: Event):
     event_id = await TaskRepository.add_task(event)
     return {**event.dict(), "id": event_id}
 
-@router.get("/events/", response_model=List[STask])
+@router.get("/api/events/", response_model=List[STask])
 async def get_events():
     return await TaskRepository.get_tasks()
 
-@router.get("/events/{event_id}", response_model=STask)
+@router.get("/api/events/{event_id}", response_model=STask)
 async def get_event(event_id: int):
     events = await TaskRepository.get_tasks()
     event = next((event for event in events if event.id == event_id), None)
@@ -24,7 +24,7 @@ async def get_event(event_id: int):
         raise HTTPException(status_code=404, detail="Event not found")
     return event
 
-@router.delete("/events/{event_id}", response_model=STask)
+@router.delete("/api/events/{event_id}", response_model=STask)
 async def delete_event(event_id: int):
     events = await TaskRepository.get_tasks()
     event = next((event for event in events if event.id == event_id), None)
