@@ -1,8 +1,29 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 from repository import TaskRepository
-from fastapi import APIRouter, HTTPException
 from schemas import Event, STask
+from fastapi import APIRouter, HTTPException
 
+# Инициализация FastAPI приложения
+app = FastAPI()
+
+# Настройка CORS
+origins = [
+    "http://localhost",
+    "http://localhost:8000",
+    "https://fsrnrmu.ru:8000",  # Замените на ваш домен
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],  # Разрешить все методы (GET, POST, PUT, DELETE, OPTIONS)
+    allow_headers=["*"],  # Разрешить все заголовки
+)
+
+# Инициализация роутера
 router = APIRouter(
     tags=["Мероприятия"],
 )
@@ -30,5 +51,8 @@ async def delete_event(event_id: int):
     event = next((event for event in events if event.id == event_id), None)
     if event is None:
         raise HTTPException(status_code=404, detail="Event not found")
-    await TaskRepository.delete_task(event_id)  # Необходимо добавить этот метод в TaskRepository
+    await TaskRepository.delete_task(event_id)
     return event
+
+# Подключение роутера к основному приложению
+app.include_router(router)
