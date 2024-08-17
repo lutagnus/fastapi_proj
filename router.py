@@ -13,6 +13,7 @@ origins = [
     "http://localhost",
     "http://localhost:8000",
     "https://fsrnrmu.ru:8000",  # Замените на ваш домен
+    "https://fs-rnrmu.ru/",
 ]
 
 app.add_middleware(
