@@ -30,5 +30,5 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["GET", "POST", "DELETE", "PUT"],
     allow_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Headers", "Access-Control-Allow-Origin",
-                   "Authorization"],
+                   "Authorization", "X-Requested-With", "X-CSRF-Token", "Referrer-Policy"],
 )
