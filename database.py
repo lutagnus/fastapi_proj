@@ -17,6 +17,7 @@ class EventOrm(Model):
     date: Mapped[datetime]
     max_participants: Mapped[int]
     for_who: Mapped[str]
+    participants = Column(JSON, default=[])
 
 async def create_tables():
     async with engine.begin() as conn:
