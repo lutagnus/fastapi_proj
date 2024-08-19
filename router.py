@@ -8,21 +8,6 @@ from fastapi import APIRouter, HTTPException
 # Инициализация FastAPI приложения
 app = FastAPI()
 
-# Настройка CORS
-origins = [
-    "http://localhost",
-    "http://localhost:8000",
-    "https://fsrnrmu.ru:8000",  # Замените на ваш домен
-    "https://fs-rnrmu.ru",
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],  # Разрешить все методы (GET, POST, PUT, DELETE, OPTIONS)
-    allow_headers=["*"],  # Разрешить все заголовки
-)
 
 # Инициализация роутера
 router = APIRouter(
