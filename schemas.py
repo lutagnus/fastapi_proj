@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict
 
@@ -8,6 +8,7 @@ class Event(BaseModel):
     date: datetime
     max_participants: int
     for_who: str
+    participants: Optional[List[str]] = None
 
 
 class STask(Event):
