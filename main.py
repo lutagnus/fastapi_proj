@@ -20,7 +20,7 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(router)
 
 origins = [
-    "https://fs-rnrmu.ru",
+    "https://fs-rnrmu.ru:443",
 ]
 
 app.add_middleware(
