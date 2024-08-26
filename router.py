@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Path, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 from repository import TaskRepository
@@ -40,7 +40,7 @@ async def delete_event(event_id: int):
     await TaskRepository.delete_task(event_id)
     return event
 
-@app.post("/api/events/{event_id}/register")
+@app.post("/api/events/{event_id}/register", response_model=STask)
 async def register_for_event(event_id: int, request: Request):
     # Получаем данные из тела запроса
     request_data = await request.json()
