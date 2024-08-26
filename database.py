@@ -18,7 +18,7 @@ class EventOrm(Model):
     date: Mapped[datetime]
     maxParticipants: Mapped[int]
     type: Mapped[str]
-    participantsList: Mapped[list[str]] = mapped_column(JSON, default=[])
+    participants: Mapped[list[str]] = mapped_column(JSON, default=[])
 
 async def create_tables():
     async with engine.begin() as conn:
