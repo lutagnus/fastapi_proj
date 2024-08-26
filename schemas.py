@@ -7,7 +7,7 @@ class Event(BaseModel):
     name: str
     date: datetime
     max_participants: int
-    for_who: str
+    type: str
     participants: Optional[List[str]] = None
 
 
