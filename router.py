@@ -51,7 +51,7 @@ async def register_for_event(event_id: int, user_id: str):
     if len(event.participants) >= event.maxParticipants:
         raise HTTPException(status_code=400, detail="Event is full")
     event.participants.append(user_id)
-    await TaskRepository.update_task(event_id, event)
+    await TaskRepository.update_task(event_id)
     return event
 
 
