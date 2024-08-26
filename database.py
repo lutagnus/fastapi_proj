@@ -16,7 +16,7 @@ class EventOrm(Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str]
     date: Mapped[datetime]
-    max_participants: Mapped[int]
+    maxParticipants: Mapped[int]
     type: Mapped[str]
     participants: Mapped[list[str]] = mapped_column(JSON, default=[])
 
