@@ -21,4 +21,10 @@ class TaskRepository:
            task_models = result.scalars().all()
            tasks = [STask.model_validate(task_model) for task_model in task_models]
            return tasks
-
+   @staticmethod
+    async def update_task(event_id: int, event: Event):
+        async with async_session() as session:
+            db_event = await session.get(EventOrm, event_id)
+            if db_event:
+                db_event.participants = event.participants
+                await session.commit()
