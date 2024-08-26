@@ -40,5 +40,20 @@ async def delete_event(event_id: int):
     await TaskRepository.delete_task(event_id)
     return event
 
+@router.post("/api/events/{event_id}/register", response_model=STask)
+async def register_for_event(event_id: int, user_id: str):
+    events = await TaskRepository.get_tasks()
+    event = next((event for event in events if event.id == event_id), None)
+    if event is None:
+        raise HTTPException(status_code=404, detail="Event not found")
+    if user_id in event.participants:
+        raise HTTPException(status_code=400, detail="User already registered for this event")
+    if len(event.participants) >= event.max_participants:
+        raise HTTPException(status_code=400, detail="Event is full")
+    event.participants.append(user_id)
+    await TaskRepository.update_task(event_id, event)
+    return event
+
+
 # Подключение роутера к основному приложению
 app.include_router(router)
