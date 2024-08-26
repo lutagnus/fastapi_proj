@@ -6,9 +6,9 @@ from pydantic import BaseModel, ConfigDict
 class Event(BaseModel):
     name: str
     date: datetime
-    max_participants: int
+    maxParticipants: int
     type: str
-    maxParticipants: Optional[List[str]] = None
+    participants: Optional[List[str]] = None
 
 
 class STask(Event):
