@@ -22,7 +22,7 @@ class TaskRepository:
            tasks = [STask.model_validate(task_model) for task_model in task_models]
            return tasks
    
-   @classmethod
+   @staticmethod
    async def update_task(event_id: int, event: Event):
         async with new_session() as session:  
             db_event = await session.get(EventOrm, event_id)
