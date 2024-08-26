@@ -23,7 +23,7 @@ class TaskRepository:
            return tasks
    
    @classmethod
-   async def update_task(event_id: int, user_id: str, task: Event):
+   async def update_task(event_id: int, event: Event):
         async with new_session() as session:  
             db_event = await session.get(EventOrm, event_id)
             if db_event:
