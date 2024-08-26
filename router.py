@@ -48,7 +48,7 @@ async def register_for_event(event_id: int, user_id: str):
         raise HTTPException(status_code=404, detail="Event not found")
     if user_id in event.participants:
         raise HTTPException(status_code=400, detail="User already registered for this event")
-    if len(event.participants) >= event.max_participants:
+    if len(event.participants) >= event.maxParticipants:
         raise HTTPException(status_code=400, detail="Event is full")
     event.participants.append(user_id)
     await TaskRepository.update_task(event_id, event)
