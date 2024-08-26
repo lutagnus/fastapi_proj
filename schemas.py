@@ -8,7 +8,7 @@ class Event(BaseModel):
     date: datetime
     maxParticipants: int
     type: str
-    participants: Optional[List[str]] = None
+    participantsList: Optional[List[str]] = None
 
 
 class STask(Event):
