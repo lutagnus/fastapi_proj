@@ -73,7 +73,7 @@ async def get_event_participants(event_id: int):
     if event is None:
         raise HTTPException(status_code=404, detail="Event not found")
     all_users = await TaskRepository.get_users()
-    participants = [user for user in all_users if user_id in event.participants]
+    participants = [user for user in all_users if user.id in event.participants]
     return participants
 
 # Подключение роутера к основному приложению
