@@ -40,6 +40,22 @@ class TaskRepository:
                 raise ValueError(f"Event with id {event_id} not found") 
 
    @staticmethod
+   async def update_event_details(event_id: int, updated_event: Event):
+        async with new_session() as session:
+            db_event = await session.get(EventOrm, event_id)
+            if db_event:
+                db_event.name = updated_event.name
+                db_event.date = updated_event.date
+                db_event.maxParticipants = updated_event.maxParticipants
+                db_event.type = updated_event.type
+
+                await session.commit()
+                await session.refresh(db_event)
+                return db_event
+            else:
+                raise ValueError(f"Мероприятие с id {event_id} не найдено")
+   
+   @staticmethod
    async def get_users():
         return [
             {"id": "1041805457", "name": "Сунгатуллин Адель Рафаэльевич", "groupNumber": "3.4.21", "type": "old"},
