@@ -20,6 +20,14 @@ class EventOrm(Model):
     type: Mapped[str]
     participants: Mapped[list[str]] = mapped_column(JSON, default=[])
 
+class UserOrm(Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True)
+    groupNumber = Column(String)
+    type = Column(String)  # 'old' или 'new'
+    isAdmin = Column(Boolean, default=False)  # Новое поле isAdmin
+
 async def create_tables():
     async with engine.begin() as conn:
         await conn.run_sync(Model.metadata.create_all)
