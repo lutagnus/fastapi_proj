@@ -10,6 +10,11 @@ class Event(BaseModel):
     type: str
     participants: Optional[List[str]] = None
 
+class User(BaseModel):
+    id: str
+    name: str
+    groupNumber: str
+    type: str
 
 class STask(Event):
     id: int
