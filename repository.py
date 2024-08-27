@@ -14,6 +14,15 @@ class TaskRepository:
            return new_task.id
 
    @classmethod
+   async def delete_task(cls, event_id: int):
+        async with new_session() as session:
+            event = await session.get(EventOrm, event_id)
+            if event is None:
+                raise HTTPException(status_code=404, detail="Event not found")
+            await session.delete(event)
+            await session.commit()
+
+   @classmethod
    async def get_tasks(cls) -> list[STask]:
        async with new_session() as session:
            query = select(EventOrm)
