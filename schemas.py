@@ -15,6 +15,7 @@ class User(BaseModel):
     name: str
     groupNumber: str
     type: str
+    isAdmin: bool
 
 class STask(Event):
     id: int
