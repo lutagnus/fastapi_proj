@@ -54,6 +54,17 @@ async def register_for_event(event_id: int, user_id: str):
     await TaskRepository.update_task(event_id, event)
     return event
 
+@router.post("/api/events/{event_id}/unregister", response_model=STask)
+async def unregister_from_event(event_id: int, user_id: str):
+    events = await TaskRepository.get_tasks()
+    event = next((event for event in events if event.id == event_id), None)
+    if event is None:
+        raise HTTPException(status_code=404, detail="Event not found")
+    if user_id not in event.participants:
+        raise HTTPException(status_code=400, detail="User is not registered for this event")
+    event.participants.remove(user_id)
+    await TaskRepository.update_task(event_id, event)
+    return event
 
 # Подключение роутера к основному приложению
 app.include_router(router)
