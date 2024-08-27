@@ -35,5 +35,5 @@ class TaskRepository:
    @staticmethod
    async def get_users():
         return [
-            {"id": "1041805457", "name": "Иван Иванов", "groupNumber": "101", "type": "old"},
+            {"id": "1041805457", "name": "Сунгатуллин Адель Рафаэльевич", "groupNumber": "3.4.21", "type": "old"},
         ]
