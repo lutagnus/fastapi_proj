@@ -31,3 +31,9 @@ class TaskRepository:
                 await session.commit()
             else:
                 raise ValueError(f"Event with id {event_id} not found") 
+
+   @staticmethod
+    async def get_users():
+        return [
+            {"id": "1041805457", "name": "Иван Иванов", "groupNumber": "101", "type": "old"},
+        ]
