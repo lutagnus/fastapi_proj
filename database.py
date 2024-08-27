@@ -20,7 +20,7 @@ class EventOrm(Model):
     type: Mapped[str]
     participants: Mapped[list[str]] = mapped_column(JSON, default=[])
 
-class UserOrm(Base):
+class UserOrm(Model):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
