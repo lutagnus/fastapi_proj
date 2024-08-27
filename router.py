@@ -76,5 +76,14 @@ async def get_event_participants(event_id: int):
     participants = [user for user in all_users if user["id"] in event.participants]
     return participants
 
+@router.put("/api/events/{event_id}/details", response_model=STask)
+async def update_event_details(event_id: int, updated_event: Event):
+    try:
+        event = await TaskRepository.update_event_details(event_id, updated_event)
+        return event
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
 # Подключение роутера к основному приложению
 app.include_router(router)
