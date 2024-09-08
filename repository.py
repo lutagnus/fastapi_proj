@@ -62,6 +62,14 @@ class TaskRepository:
                 select(EventOrm).where(EventOrm.participants.contains([str(user_id)]))
             )
             return events.scalars().all()
+
+   @staticmethod
+   async def get_user_by_id(user_id: str):
+        async with new_session() as session:
+            user = await session.get(UserOrm, user_id)
+            if not user:
+                raise ValueError(f"User with id {user_id} not found")
+            return user
    
    @staticmethod
    async def get_users():
