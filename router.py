@@ -50,6 +50,10 @@ async def register_for_event(event_id: int, user_id: str):
         raise HTTPException(status_code=400, detail="User already registered for this event")
     if len(event.participants) >= event.maxParticipants:
         raise HTTPException(status_code=400, detail="Event is full")
+    if user_type == 'new':
+        new_user_events = [ev for ev in events if ev.type == 'new' and user_id in ev.participants]
+        if len(new_user_events) >= 1:
+            raise HTTPException(status_code=400, detail="Вы уже зарегистрированы на другое мероприятие для новичков")
     event.participants.append(user_id)
     await TaskRepository.update_task(event_id, event)
     return event
