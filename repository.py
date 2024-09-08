@@ -54,6 +54,14 @@ class TaskRepository:
                 return db_event
             else:
                 raise ValueError(f"Мероприятие с id {event_id} не найдено")
+
+   @staticmethod
+   async def get_user_events(user_id: int):
+        async with new_session() as session:
+            events = await session.execute(
+                select(EventOrm).where(EventOrm.participants.contains([str(user_id)]))
+            )
+            return events.scalars().all()
    
    @staticmethod
    async def get_users():
