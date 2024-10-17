@@ -125,4 +125,5 @@ class TaskRepository:
            {"id": "1187813043", "name": "Евдокимова Ольга Андреевна", "groupNumber": "Орд.1.18", "type": "new"},
            {"id": "1694026110", "name": "Миша", "groupNumber": "....", "type": "new"},
            {"id": "1186568851", "name": "Жихарева Евгения Александровна", "groupNumber": "2.2.18а", "type": "new"},
+           {"id": "1573404642", "name": "Рудова Полина Дмитриевна", "groupNumber": "3.2.01", "type": "new"},
         ]
