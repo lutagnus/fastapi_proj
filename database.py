@@ -20,24 +20,6 @@ class EventOrm(Model):
     type: Mapped[str]
     participants: Mapped[list[str]] = mapped_column(JSON, default=[])
 #new
-class Attendance(Model):
-    __tablename__ = "attendances"
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    event_id = Column(Integer, ForeignKey("events.id"))
-
-    user = relationship("User", back_populates="attendances")
-    event = relationship("Event", back_populates="attendances")
-
-#new
-class UserOrm(Model):
-    __tablename__ = "users"
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    name: Mapped[str] = mapped_column(String, nullable=False)
-    groupNumber: Mapped[str] = mapped_column(String, nullable=False)
-    type: Mapped[str] = mapped_column(String, nullable=False)
-
-    attendances = relationship("Attendance", back_populates="user")
 
 
 async def create_tables():
