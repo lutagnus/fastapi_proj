@@ -24,3 +24,11 @@ class STask(Event):
 class STaskId(BaseModel):
     ok: bool = True
     event_id: int
+
+class AttendanceSummary(BaseModel):
+    user_id: int
+    name: str
+    total_attendances: int
+
+    class Config:
+        orm_mode = True
