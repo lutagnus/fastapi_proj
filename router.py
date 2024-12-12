@@ -85,6 +85,19 @@ async def update_event_details(event_id: int, updated_event: Event):
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
+#new
+@router.get("/api/events/attendance-summary", response_model=list[AttendanceSummary])
+async def get_attendance_summary():
+    async with new_session() as session:
+        result = await session.execute(
+            session.query(
+                UserOrm.id.label("user_id"),
+                UserOrm.name,
+                func.count(Attendance.id).label("total_attendances")
+            ).join(Attendance, UserOrm.id == Attendance.user_id)
+            .group_by(UserOrm.id, UserOrm.name)
+        )
+        return result.all()
 
 # Подключение роутера к основному приложению
 app.include_router(router)
