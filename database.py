@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import JSON
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy import JSON, Column, Integer, ForeignKey, String
 
 #подключение к бд
 engine = create_async_engine("sqlite+aiosqlite:///events.db")
@@ -19,6 +19,25 @@ class EventOrm(Model):
     maxParticipants: Mapped[int]
     type: Mapped[str]
     participants: Mapped[list[str]] = mapped_column(JSON, default=[])
+#new
+class Attendance(Model):
+    __tablename__ = "attendances"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    event_id = Column(Integer, ForeignKey("events.id"))
+
+    user = relationship("User", back_populates="attendances")
+    event = relationship("Event", back_populates="attendances")
+
+#new
+class UserOrm(Model):
+    __tablename__ = "users"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String, nullable=False)
+    groupNumber: Mapped[str] = mapped_column(String, nullable=False)
+    type: Mapped[str] = mapped_column(String, nullable=False)
+
+    attendances = relationship("Attendance", back_populates="user")
 
 
 async def create_tables():
