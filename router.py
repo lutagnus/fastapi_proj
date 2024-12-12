@@ -1,8 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 from repository import TaskRepository
-from schemas import Event, STask, User 
+from schemas import Event, STask, User, AttendanceSummary
 from fastapi import APIRouter, HTTPException
 
 # Инициализация FastAPI приложения
