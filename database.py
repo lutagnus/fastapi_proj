@@ -1,31 +1,15 @@
-from datetime import datetime
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import JSON, Column, Integer, ForeignKey, String
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
-#подключение к бд
-engine = create_async_engine("sqlite+aiosqlite:///events.db")
-new_session = async_sessionmaker(engine, expire_on_commit=False)
+# Укажите строку подключения к вашей базе данных
+SQLALCHEMY_DATABASE_URL = "postgresql+asyncpg://postgres:postgres@localhost/fsrnrmu"
 
-class Model(DeclarativeBase):
-    pass
+# Создайте движок
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
-#определение таблицы
-class EventOrm(Model):
-    __tablename__ = "events"
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    name: Mapped[str]
-    date: Mapped[datetime]
-    maxParticipants: Mapped[int]
-    type: Mapped[str]
-    participants: Mapped[list[str]] = mapped_column(JSON, default=[])
-#new
+# Создайте сессию
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-
-async def create_tables():
-    async with engine.begin() as conn:
-        await conn.run_sync(Model.metadata.create_all)
-
-async def delete_tables():
-    async with engine.begin() as conn:
-        await conn.run_sync(Model.metadata.drop_all)
+# Базовый класс для моделей
+Base = declarative_base()
