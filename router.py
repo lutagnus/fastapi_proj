@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 from repository import TaskRepository
-from schemas import Event, STask, User
+from schemas import Event, STask, User, DataModel
 from fastapi import APIRouter, HTTPException
 import pandas as pd
 import os
