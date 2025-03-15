@@ -100,7 +100,7 @@ def send_telegram_message(message: str):
     if response.status_code != 200:
         raise Exception(f"Ошибка отправки сообщения в Telegram: {response.text}")
 
-@router.post("/api/data")
+@router.post("/api/data/")
 async def receive_data(data: DataModel):
     try:
         # Формируем сообщение для Telegram
