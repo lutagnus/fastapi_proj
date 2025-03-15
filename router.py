@@ -89,26 +89,34 @@ async def update_event_details(event_id: int, updated_event: Event):
 #new
 
 
-# Функция для записи данных в Excel
-def write_to_excel(data: dict):
-    try:
-        if os.path.exists(EXCEL_FILE):
-            df = pd.read_excel(EXCEL_FILE)
-        else:
-            df = pd.DataFrame()
+def send_telegram_message(message: str):
+    url = f"https://api.telegram.org/bot7822968867:AAHYneM1jRfOlYHlDsnFgwUiyzvbmLAY0nY/sendMessage"
+    payload = {
+        "chat_id": -4678833750,
+        "text": message
+    }
+    response = requests.post(url, json=payload)
+    if response.status_code != 200:
+        raise Exception(f"Ошибка отправки сообщения в Telegram: {response.text}")
 
-        new_row = pd.DataFrame([data])
-        df = pd.concat([df, new_row], ignore_index=True)
-        df.to_excel(EXCEL_FILE, index=False)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error writing to Excel: {str(e)}")
-
-@router.post("/api/data")
+@app.post("/api/data")
 async def receive_data(data: DataModel):
     try:
-        write_to_excel(data.dict())
-        return {"status": "success", "message": "Data saved successfully"}
+        # Формируем сообщение для Telegram
+        message = (
+            "Новые данные получены:\n"
+            f"Имя: {data.name}\n"
+            f"Возраст: {data.age}\n"
+            f"Email: {data.email}"
+        )
+
+        # Отправляем сообщение в Telegram
+        send_telegram_message(message)
+
+        return {"status": "success", "message": "Data sent to Telegram successfully"}
     except Exception as e:
+        # Отправляем сообщение об ошибке в Telegram
+        send_telegram_message(f"Ошибка: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 # Подключение роутера к основному приложению
