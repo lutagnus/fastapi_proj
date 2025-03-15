@@ -6,6 +6,7 @@ from schemas import Event, STask, User, DataModel
 from fastapi import APIRouter, HTTPException
 import pandas as pd
 import os
+import requests
 # Инициализация FastAPI приложения
 app = FastAPI()
 
