@@ -101,14 +101,16 @@ def send_telegram_message(message: str):
         raise Exception(f"Ошибка отправки сообщения в Telegram: {response.text}")
 
 @router.post("/api/data/")
-async def receive_data(data: DataModel):
+async def receive_data(
+    trader_id: str = Query(..., description="ID трейдера"),  # Обязательный параметр
+    reg: str = Query(..., description="Регион")              # Обязательный параметр
+):
     try:
         # Формируем сообщение для Telegram
         message = (
             "Новые данные получены:\n"
-            f"Имя: {data.name}\n"
-            f"Возраст: {data.age}\n"
-            f"Email: {data.email}"
+            f"Trader ID: {trader_id}\n"
+            f"Регион: {reg}"
         )
 
         # Отправляем сообщение в Telegram
