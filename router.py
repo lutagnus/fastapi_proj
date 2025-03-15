@@ -4,7 +4,9 @@ from typing import List
 from repository import TaskRepository
 from schemas import Event, STask, User
 from fastapi import APIRouter, HTTPException
-
+from pydantic import BaseModel
+import pandas as pd
+import os
 # Инициализация FastAPI приложения
 app = FastAPI()
 
@@ -86,7 +88,36 @@ async def update_event_details(event_id: int, updated_event: Event):
         raise HTTPException(status_code=404, detail=str(e))
 
 #new
+class DataModel(BaseModel):
+    name: str
+    age: int
+    email: str
 
+# Функция для записи данных в Excel
+def write_to_excel(data: dict):
+    # Если файл уже существует, загружаем его
+    if os.path.exists(EXCEL_FILE):
+        df = pd.read_excel(EXCEL_FILE)
+    else:
+        df = pd.DataFrame()
+
+    # Добавляем новые данные
+    new_row = pd.DataFrame([data])
+    df = pd.concat([df, new_row], ignore_index=True)
+
+    # Сохраняем данные в Excel
+    df.to_excel(EXCEL_FILE, index=False)
+
+@router.post("/api/data")
+async def receive_data(data: DataModel):
+    # Преобразуем данные в словарь
+    data_dict = data.dict()
+
+    # Записываем данные в Excel
+    write_to_excel(data_dict)
+
+    # Возвращаем ответ
+    return {"status": "success", "message": "Data saved successfully"}
 
 # Подключение роутера к основному приложению
 app.include_router(router)
