@@ -91,29 +91,25 @@ async def update_event_details(event_id: int, updated_event: Event):
 
 # Функция для записи данных в Excel
 def write_to_excel(data: dict):
-    # Если файл уже существует, загружаем его
-    if os.path.exists(EXCEL_FILE):
-        df = pd.read_excel(EXCEL_FILE)
-    else:
-        df = pd.DataFrame()
+    try:
+        if os.path.exists(EXCEL_FILE):
+            df = pd.read_excel(EXCEL_FILE)
+        else:
+            df = pd.DataFrame()
 
-    # Добавляем новые данные
-    new_row = pd.DataFrame([data])
-    df = pd.concat([df, new_row], ignore_index=True)
-
-    # Сохраняем данные в Excel
-    df.to_excel(EXCEL_FILE, index=False)
+        new_row = pd.DataFrame([data])
+        df = pd.concat([df, new_row], ignore_index=True)
+        df.to_excel(EXCEL_FILE, index=False)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error writing to Excel: {str(e)}")
 
 @router.post("/api/data")
 async def receive_data(data: DataModel):
-    # Преобразуем данные в словарь
-    data_dict = data.dict()
-
-    # Записываем данные в Excel
-    write_to_excel(data_dict)
-
-    # Возвращаем ответ
-    return {"status": "success", "message": "Data saved successfully"}
+    try:
+        write_to_excel(data.dict())
+        return {"status": "success", "message": "Data saved successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 # Подключение роутера к основному приложению
 app.include_router(router)
