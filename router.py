@@ -100,7 +100,7 @@ def send_telegram_message(message: str):
     if response.status_code != 200:
         raise Exception(f"Ошибка отправки сообщения в Telegram: {response.text}")
 
-@router.post("/api/data/")
+@router.get("/api/data/")
 async def receive_data(
     trader_id: str = Query(..., description="ID трейдера"),  # Обязательный параметр
     reg: str = Query(..., description="Регион")              # Обязательный параметр
