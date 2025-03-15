@@ -25,3 +25,9 @@ class STaskId(BaseModel):
     ok: bool = True
     event_id: int
 
+
+#new
+class DataModel(BaseModel):
+    name: str
+    age: int
+    email: str
