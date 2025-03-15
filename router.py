@@ -4,7 +4,6 @@ from typing import List
 from repository import TaskRepository
 from schemas import Event, STask, User
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
 import pandas as pd
 import os
 # Инициализация FastAPI приложения
@@ -88,10 +87,7 @@ async def update_event_details(event_id: int, updated_event: Event):
         raise HTTPException(status_code=404, detail=str(e))
 
 #new
-class DataModel(BaseModel):
-    name: str
-    age: int
-    email: str
+
 
 # Функция для записи данных в Excel
 def write_to_excel(data: dict):
