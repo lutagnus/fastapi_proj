@@ -103,13 +103,12 @@ def send_telegram_message(message: str):
 @router.get("/api/data/")
 async def receive_data(
     trader_id: str = Query(..., description="ID трейдера"),  # Обязательный параметр
-    reg: str = Query(..., description="reg"),              # Обязательный параметр
-    ftd: str = Query(..., description="ftd"),             # Обязательный параметр
-    dep: str = Query(..., description="dep")              # Обязательный параметр
+    reg: str = Query(..., description="reg")             # Обязательный параметр
+                 # Обязательный параметр
 ):
     try:
         # Формируем сообщение для Telegram
-        message = (f"Игрок: {trader_id} Зарегистрировался {reg} Внес первый депозит {ftd} Внес депозит {dep}"
+        message = (f"Игрок: {trader_id} Зарегистрировался {reg} "
         )
 
         # Отправляем сообщение в Telegram
@@ -121,5 +120,25 @@ async def receive_data(
         send_telegram_message(f"Ошибка: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@router.get("/api/dep/")
+async def receive_data(
+     trader_id: str = Query(..., description="ID трейдера"),
+    ftd: str = Query(..., description="ftd"),             # Обязательный параметр
+    dep: str = Query(..., description="dep"),
+    sumdep: str = Query(..., description="sumdep") 
+):
+    try:
+        # Формируем сообщение для Telegram
+        message = (f"Игрок: {trader_id} Внес первый депозит {ftd} Внес депозит {dep}. Сумма: {sumdep}"
+        )
+
+        # Отправляем сообщение в Telegram
+        send_telegram_message(message)
+
+        return {"status": "success", "message": "Data sent to Telegram successfully"}
+    except Exception as e:
+        # Отправляем сообщение об ошибке в Telegram
+        send_telegram_message(f"Ошибка: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 # Подключение роутера к основному приложению
 app.include_router(router)
