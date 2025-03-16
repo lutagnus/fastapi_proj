@@ -103,14 +103,13 @@ def send_telegram_message(message: str):
 @router.get("/api/data/")
 async def receive_data(
     trader_id: str = Query(..., description="ID трейдера"),  # Обязательный параметр
-    reg: str = Query(..., description="Регион")              # Обязательный параметр
+    reg: str = Query(..., description="reg")              # Обязательный параметр
+    ftd: str = Query(..., description="ftd")              # Обязательный параметр
+    dep: str = Query(..., description="dep")              # Обязательный параметр
 ):
     try:
         # Формируем сообщение для Telegram
-        message = (
-            "Новые данные получены:\n"
-            f"Trader ID: {trader_id}\n"
-            f"Регион: {reg}"
+        message = (f"Игрок: {trader_id} Зарегистрировался {reg} Внес первый депозит {ftd} Внес депозит {dep}"
         )
 
         # Отправляем сообщение в Telegram
