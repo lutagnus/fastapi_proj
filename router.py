@@ -103,8 +103,8 @@ def send_telegram_message(message: str):
 @router.get("/api/data/")
 async def receive_data(
     trader_id: str = Query(..., description="ID трейдера"),  # Обязательный параметр
-    reg: str = Query(..., description="reg")              # Обязательный параметр
-    ftd: str = Query(..., description="ftd")              # Обязательный параметр
+    reg: str = Query(..., description="reg"),              # Обязательный параметр
+    ftd: str = Query(..., description="ftd"),             # Обязательный параметр
     dep: str = Query(..., description="dep")              # Обязательный параметр
 ):
     try:
