@@ -48,7 +48,7 @@ class TaskRepository:
                 db_event.date = updated_event.date
                 db_event.maxParticipants = updated_event.maxParticipants
                 db_event.type = updated_event.type
-
+                db_event.is_registration_closed = updated_event.is_registration_closed
                 await session.commit()
                 await session.refresh(db_event)
                 return db_event
