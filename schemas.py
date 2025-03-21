@@ -9,6 +9,7 @@ class Event(BaseModel):
     maxParticipants: int
     type: str
     participants: Optional[List[str]] = None
+    is_registration_closed: bool = False
 
 class User(BaseModel):
     id: str
