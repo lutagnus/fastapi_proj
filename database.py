@@ -19,6 +19,7 @@ class EventOrm(Model):
     maxParticipants: Mapped[int]
     type: Mapped[str]
     participants: Mapped[list[str]] = mapped_column(JSON, default=[])
+    is_registration_closed: Mapped[bool] = mapped_column(Boolean, default=False)
 #new
 
 
