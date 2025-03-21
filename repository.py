@@ -35,7 +35,7 @@ class TaskRepository:
             db_event = await session.get(EventOrm, event_id)
             if db_event:
                 db_event.participants = event.participants
-               db_event.is_registration_closed = event.is_registration_closed
+                db_event.is_registration_closed = event.is_registration_closed
                 await session.commit()
             else:
                 raise ValueError(f"Event with id {event_id} not found") 
