@@ -48,6 +48,8 @@ async def register_for_event(event_id: int, user_id: str):
     event = next((event for event in events if event.id == event_id), None)
     if event is None:
         raise HTTPException(status_code=404, detail="Event not found")
+    if event.is_registration_closed:
+        raise HTTPException(status_code=400, detail="Registration is closed for this event")
     if user_id in event.participants:
         raise HTTPException(status_code=400, detail="User already registered for this event")
     if len(event.participants) >= event.maxParticipants:
@@ -87,6 +89,16 @@ async def update_event_details(event_id: int, updated_event: Event):
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
+@router.post("/api/events/{event_id}/close-registration", response_model=STask)
+async def close_registration(event_id: int):
+    events = await TaskRepository.get_tasks()
+    event = next((event for event in events if event.id == event_id), None)
+    if event is None:
+        raise HTTPException(status_code=404, detail="Event not found")
+    
+    event.is_registration_closed = True  # Закрываем регистрацию
+    await TaskRepository.update_task(event_id, event)
+    return event
 #new
 
 
