@@ -107,7 +107,7 @@ async def open_registration(event_id: int):
         raise HTTPException(status_code=404, detail="Мероприятие не найдено")
     
     event.is_registration_closed = False  # Открываем регистрацию
-    await TaskRepository.update_event(event)
+    await TaskRepository.update_task(event_id, event)
     return event
 
 #new
