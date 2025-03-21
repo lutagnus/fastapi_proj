@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import JSON, Column, Integer, ForeignKey, String
+from sqlalchemy import JSON, Column, Integer, ForeignKey, String, Boolean
 
 #подключение к бд
 engine = create_async_engine("sqlite+aiosqlite:///events.db")
