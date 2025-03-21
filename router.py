@@ -100,7 +100,7 @@ async def close_registration(event_id: int):
     await TaskRepository.update_task(event_id, event)
     return event
 
-@router.post("/api/events/{event_id}/open-registration", response_model=Event)
+@router.post("/api/events/{event_id}/open-registration", response_model=STask)
 async def open_registration(event_id: int):
     event = await TaskRepository.get_tasks()
     if event is None:
