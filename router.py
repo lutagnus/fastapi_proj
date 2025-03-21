@@ -99,6 +99,17 @@ async def close_registration(event_id: int):
     event.is_registration_closed = True  # Закрываем регистрацию
     await TaskRepository.update_task(event_id, event)
     return event
+
+@router.post("/api/events/{event_id}/open-registration", response_model=Event)
+async def open_registration(event_id: int):
+    event = await TaskRepository.get_event(event_id)
+    if event is None:
+        raise HTTPException(status_code=404, detail="Мероприятие не найдено")
+    
+    event.is_registration_closed = False  # Открываем регистрацию
+    await TaskRepository.update_event(event)
+    return event
+
 #new
 
 
