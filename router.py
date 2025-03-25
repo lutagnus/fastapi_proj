@@ -148,10 +148,16 @@ def update_google_sheet(event: Event):
 
     return {"message": "Обновление завершено."}
 
-@router.post("/api/events/update_google")
-async def update_event(event: Event):
+@router.post("/api/events/update_google", response_model=STask)
+async def update_event(event_id: int):
+    events = await TaskRepository.get_tasks()  # Получаем список всех событий
+    event = next((event for event in events if event.id == event_id), None)  # Ищем нужное
+
+    if event is None:
+        raise HTTPException(status_code=404, detail="Event not found")
+
     try:
-        result = update_google_sheet(event)
+        result = update_google_sheet(event)  # Обновляем Google-таблицу
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
