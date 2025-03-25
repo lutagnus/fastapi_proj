@@ -7,6 +7,17 @@ from fastapi import APIRouter, HTTPException
 import pandas as pd
 import os
 import requests
+import gspread
+from google.oauth2.service_account import Credentials
+
+# Авторизация для Google Sheets
+SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
+creds = Credentials.from_service_account_file("credentials.json", scopes=SCOPES)
+client = gspread.authorize(creds)
+
+# Идентификатор таблицы и листа
+SPREADSHEET_ID = "1Oj0Y_C_Kybib47WrYHySIBPMhlyzdfUd-r1cJdJjJuA"
+SHEET_NAME = "list"
 # Инициализация FastAPI приложения
 app = FastAPI()
 
@@ -112,7 +123,38 @@ async def open_registration(event_id: int):
     return event
 
 #new
+def update_google_sheet(event: Event):
+    sheet = client.open_by_key(SPREADSHEET_ID).worksheet(SHEET_NAME)
+    
+    # Получаем данные из таблицы
+    all_values = sheet.get_all_values()
 
+    # Находим столбец с датой
+    date_row = all_values[2]  # Строка 3 (нумерация с 0)
+    date_indexes = [i for i, value in enumerate(date_row) if value.strip() == event.date.strftime('%Y-%m-%d')]
+
+    if not date_indexes:
+        raise HTTPException(status_code=404, detail="Дата не найдена")
+
+    # Находим участников в столбце A
+    participant_rows = {row[0]: idx for idx, row in enumerate(all_values)}
+
+    if event.participants:
+        for participant in event.participants:
+            if participant in participant_rows:
+                row_index = participant_rows[participant]
+                for col_index in date_indexes:
+                    sheet.update_cell(row_index + 1, col_index + 1, "Истина")  # +1, т.к. индексация с 1
+
+    return {"message": "Обновление завершено."}
+
+@app.post("/update_event")
+async def update_event(event: Event):
+    try:
+        result = update_google_sheet(event)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 def send_telegram_message(message: str):
     url = f"https://api.telegram.org/bot7822968867:AAHYneM1jRfOlYHlDsnFgwUiyzvbmLAY0nY/sendMessage"
