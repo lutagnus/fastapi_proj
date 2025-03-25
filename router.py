@@ -148,7 +148,7 @@ def update_google_sheet(event: Event):
 
     return {"message": "Обновление завершено."}
 
-@app.post("/api/events/update_google")
+@router.post("/api/events/update_google")
 async def update_event(event: Event):
     try:
         result = update_google_sheet(event)
