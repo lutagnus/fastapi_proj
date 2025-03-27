@@ -149,7 +149,7 @@ def update_google_sheet(event: Event):
 
     return {"message": "Обновление завершено.",
            "name": event.name,
-                "date": event.date.strftime('%d.%m.%y'),
+                "date": event.date.strftime('%Y-%m-%d'),
                 "maxParticipants": event.maxParticipants,
                 "type": event.type,
                 "id": event.id,
