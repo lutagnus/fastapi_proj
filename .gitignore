@@ -3,4 +3,4 @@ events.db
 events
 .idea
 __pycache__
-credentials.json
+cred.json
