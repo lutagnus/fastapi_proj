@@ -128,6 +128,7 @@ def update_google_sheet(event: Event):
     id_to_fio = {
             "109284289": "Сунгатуллин Адель Рафаэльевич"
     }
+    search_date = event.date.strftime('%d.%m.%y')
         # Получаем данные из таблицы
     all_values = sheet.get_all_values()
     # Находим столбец с датой
