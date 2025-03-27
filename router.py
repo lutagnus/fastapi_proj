@@ -137,15 +137,34 @@ def update_google_sheet(event: Event):
 
     # Находим участников в столбце A
     participant_rows = {row[0]: idx for idx, row in enumerate(all_values)}
-
+    requests = []
     if event.participants:
         for participant in event.participants:
             if participant in participant_rows:
                 row_index = participant_rows[participant]
                 for col_index in date_indexes:
                     # Для настоящего чекбокса (требуется Google Sheets API v4)
-                    sheet.insert_checkbox(row_index + 1, col_index + 1, True)
+                    #sheet.insert_checkbox(row_index + 1, col_index + 1, True)
                     #sheet.update_cell(row_index + 1, col_index + 1, "Истина")  # +1, т.к. индексация с 1
+                    requests.append({
+                        'setDataValidation': {
+                            'range': {
+                                'sheetId': sheet.id,
+                                'startRowIndex': row-1,
+                                'endRowIndex': row,
+                                'startColumnIndex': col-1,
+                                'endColumnIndex': col
+                            },
+                            'rule': {
+                                'condition': {
+                                    'type': 'BOOLEAN'
+                                }
+                            }
+                        }
+                    })
+        if requests:
+            sheet.spreadsheet.batch_update({'requests': requests})
+
 
     return {"message": "Обновление завершено.",
            "name": event.name,
