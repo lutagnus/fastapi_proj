@@ -148,4 +148,5 @@ class TaskRepository:
            {"id": "1721530031", "name": "Шкуратова Валентина Николаевна", "groupNumber": "3.1.22", "type": "new"},
            {"id": "433255152", "name": "Ковальчук Полина Анатольевна", "groupNumber": "", "type": "new"},
            {"id": "778459612", "name": "Мустонина Алена Евгеньевна", "groupNumber": "3.4.12б", "type": "new"},
+           {"id": "694013333", "name": "Любка Шлюпка", "groupNumber": "Лошок", "type": "old"},
         ]
