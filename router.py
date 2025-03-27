@@ -12,7 +12,7 @@ from google.oauth2.service_account import Credentials
 
 # Авторизация для Google Sheets
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
-creds = Credentials.from_service_account_file("credentials.json", scopes=SCOPES)
+creds = Credentials.from_service_account_file("cred.json", scopes=SCOPES)
 client = gspread.authorize(creds)
 
 # Идентификатор таблицы и листа
