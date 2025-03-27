@@ -145,7 +145,12 @@ def update_google_sheet(event: Event):
                 for col_index in date_indexes:
                     sheet.update_cell(row_index + 1, col_index + 1, "Истина")  # +1, т.к. индексация с 1
 
-    return {"message": "Обновление завершено."}
+    return {"message": "Обновление завершено.",
+           "name": event.name,
+                "date": event.date.strftime('%Y-%m-%d'),
+                "maxParticipants": event.maxParticipants,
+                "type": event.type,
+                "id": event.id}
 
 @router.post("/api/events/update_google", response_model=STask)
 async def update_event(event_id: int):
