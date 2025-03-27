@@ -150,7 +150,8 @@ def update_google_sheet(event: Event):
                 "date": event.date.strftime('%Y-%m-%d'),
                 "maxParticipants": event.maxParticipants,
                 "type": event.type,
-                "id": event.id}
+                "id": event.id,
+                "participants": event.participants}
 
 @router.post("/api/events/update_google", response_model=STask)
 async def update_event(event_id: int):
