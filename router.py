@@ -150,10 +150,10 @@ def update_google_sheet(event: Event):
                         'setDataValidation': {
                             'range': {
                                 'sheetId': sheet.id,
-                                'startRowIndex': row-1,
-                                'endRowIndex': row,
-                                'startColumnIndex': col-1,
-                                'endColumnIndex': col
+                                'startRowIndex': row_index,
+                                'endRowIndex': row_index+1,
+                                'startColumnIndex': col_index,
+                                'endColumnIndex': col_index+1
                             },
                             'rule': {
                                 'condition': {
