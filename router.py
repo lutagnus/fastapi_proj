@@ -138,22 +138,27 @@ def update_google_sheet(event: Event):
     # Находим участников в столбце A
     participant_rows = {row[0]: idx for idx, row in enumerate(all_values)}
     requests = []
-    if event.participants:
-        for participant in event.participants:
-            if participant in participant_rows:
-                row_index = participant_rows[participant]
-                for col_index in date_indexes:
-                    # Для настоящего чекбокса (требуется Google Sheets API v4)
-                    #sheet.insert_checkbox(row_index + 1, col_index + 1, True)
-                    #sheet.update_cell(row_index + 1, col_index + 1, "Истина")  # +1, т.к. индексация с 1
-                    requests.append({
-                        'setDataValidation': {
-                            'range': {
-                                'sheetId': sheet.id,
-                                'startRowIndex': row_index,
-                                'endRowIndex': row_index+1,
-                                'startColumnIndex': col_index,
-                                'endColumnIndex': col_index+1
+    updates = []
+        
+    for participant_id in event.participants:
+            # Получаем ФИО по ID участника
+        participant_fio = id_to_fio.get(participant_id)
+        if not participant_fio or participant_fio not in participant_rows:
+            continue
+                
+        row_idx = participant_rows[participant_fio]
+            
+        for col_idx in date_cols:
+                # Для первой колонки - чекбокс
+            if date_cols.index(col_idx) % 2 == 0:
+                requests.append({
+                    'setDataValidation': {
+                        'range': {
+                            'sheetId': sheet.id,
+                            'startRowIndex': row_idx,
+                            'endRowIndex': row_idx+1,
+                            'startColumnIndex': col_idx,
+                            'endColumnIndex': col_idx+1
                             },
                             'rule': {
                                 'condition': {
@@ -162,8 +167,26 @@ def update_google_sheet(event: Event):
                             }
                         }
                     })
-        if requests:
-            sheet.spreadsheet.batch_update({'requests': requests})
+                updates.append({
+                    'range': f"{gspread.utils.rowcol_to_a1(row_idx+1, col_idx+1)}",
+                    'values': [[True]]
+                    })
+                # Для второй колонки - отметка о присутствии
+            else:
+                updates.append({
+                        'range': f"{gspread.utils.rowcol_to_a1(row_idx+1, col_idx+1)}",
+                        'values': [["✓ Присутствовал"]]
+                    })
+
+        # Выполняем обновления
+    if requests:
+        sheet.spreadsheet.batch_update({'requests': requests})
+        
+    if updates:
+            # Группируем обновления по 10 для избежания лимитов API
+        for i in range(0, len(updates), 10):
+            batch = updates[i:i+10]
+            sheet.batch_update(batch)
 
 
     return {"message": "Обновление завершено.",
