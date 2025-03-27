@@ -182,7 +182,7 @@ def update_google_sheet(event: Event):
             else:
                 updates.append({
                         'range': f"{gspread.utils.rowcol_to_a1(row_idx+1, col_idx+1)}",
-                        'values': [["✓ Присутствовал"]]
+                        'values': [[True]]
                     })
 
         # Выполняем обновления
