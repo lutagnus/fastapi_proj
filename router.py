@@ -125,10 +125,12 @@ async def open_registration(event_id: int):
 #new
 def update_google_sheet(event: Event):
     sheet = client.open_by_key(SPREADSHEET_ID).worksheet(SHEET_NAME)
-    
+    if not sheet:
+        raise HTTPException(status_code=404, detail="Лист не найден")
     # Получаем данные из таблицы
     all_values = sheet.get_all_values()
-
+    if not all_values:
+        raise HTTPException(status_code=404, detail="Значения не найдены")
     # Находим столбец с датой
     date_row = all_values[2]  # Строка 3 (нумерация с 0)
     date_indexes = [i for i, value in enumerate(date_row) if value.strip() == event.date.strftime('%Y-%m-%d')]
