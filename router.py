@@ -130,7 +130,7 @@ def update_google_sheet(event: Event):
     all_values = sheet.get_all_values()
     # Находим столбец с датой
     date_row = all_values[2]  # Строка 3 (нумерация с 0)
-    date_indexes = [i for i, value in enumerate(date_row) if value.strip() == event.date.strftime('%Y-%m-%d')]
+    date_indexes = [i for i, value in enumerate(date_row) if value.strip() == event.date.strftime('%d.%m.%y')]
 
     #if not date_indexes:
      #   raise HTTPException(status_code=404, detail="Дата не найдена")
@@ -143,11 +143,13 @@ def update_google_sheet(event: Event):
             if participant in participant_rows:
                 row_index = participant_rows[participant]
                 for col_index in date_indexes:
-                    sheet.update_cell(row_index + 1, col_index + 1, "Истина")  # +1, т.к. индексация с 1
+                    # Для настоящего чекбокса (требуется Google Sheets API v4)
+                    sheet.update_cell(row_index + 1, col_index + 1, "=TRUE()")
+                    #sheet.update_cell(row_index + 1, col_index + 1, "Истина")  # +1, т.к. индексация с 1
 
     return {"message": "Обновление завершено.",
            "name": event.name,
-                "date": event.date.strftime('%Y-%m-%d'),
+                "date": event.date.strftime('%d.%m.%y'),
                 "maxParticipants": event.maxParticipants,
                 "type": event.type,
                 "id": event.id,
