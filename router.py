@@ -132,8 +132,8 @@ def update_google_sheet(event: Event):
     date_row = all_values[2]  # Строка 3 (нумерация с 0)
     date_indexes = [i for i, value in enumerate(date_row) if value.strip() == event.date.strftime('%Y-%m-%d')]
 
-    if not date_indexes:
-        raise HTTPException(status_code=404, detail="Дата не найдена")
+    #if not date_indexes:
+     #   raise HTTPException(status_code=404, detail="Дата не найдена")
 
     # Находим участников в столбце A
     participant_rows = {row[0]: idx for idx, row in enumerate(all_values)}
