@@ -144,7 +144,7 @@ def update_google_sheet(event: Event):
                 row_index = participant_rows[participant]
                 for col_index in date_indexes:
                     # Для настоящего чекбокса (требуется Google Sheets API v4)
-                    sheet.update_cell(row_index + 1, col_index + 1, "=TRUE()")
+                    sheet.insert_checkbox(row_index + 1, col_index + 1, True)
                     #sheet.update_cell(row_index + 1, col_index + 1, "Истина")  # +1, т.к. индексация с 1
 
     return {"message": "Обновление завершено.",
