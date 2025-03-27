@@ -141,7 +141,11 @@ def update_google_sheet(event: Event):
     participant_rows = {row[0]: idx for idx, row in enumerate(all_values)}
     requests = []
     updates = []
-        
+    date_row = all_values[2]  # Строка с датами
+    date_cols = []
+    for i in range(0, len(date_row), 2):
+        if date_row[i].strip() == search_date:
+            date_cols.extend([i, i+1]) 
     for participant_id in event.participants:
             # Получаем ФИО по ID участника
         participant_fio = id_to_fio.get(participant_id)
