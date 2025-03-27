@@ -125,7 +125,9 @@ async def open_registration(event_id: int):
 #new
 def update_google_sheet(event: Event):
     sheet = client.open_by_key(SPREADSHEET_ID).worksheet(SHEET_NAME)
-        
+    id_to_fio = {
+            "109284289": "Сунгатуллин Адель Рафаэльевич"
+    }
         # Получаем данные из таблицы
     all_values = sheet.get_all_values()
     # Находим столбец с датой
