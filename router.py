@@ -68,13 +68,7 @@ async def register_for_event(event_id: int, user_id: str):
         raise HTTPException(status_code=400, detail="Event is full")
     
     # Получаем данные пользователя
-    user = await TaskRepository.get_user(user_id)
-    if not user:
-        raise HTTPException(status_code=400, detail="User not found")
     
-    # Проверяем тип мероприятия (если не 'all', то проверяем соответствие типов)
-    if event.type != 'all' and user.get('type') != event.type:
-        raise HTTPException(status_code=400, detail="Event type doesn't match user type")
     
     event.participants.append(user_id)
     await TaskRepository.update_task(event_id, event)
