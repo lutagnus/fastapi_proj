@@ -53,6 +53,7 @@ async def delete_event(event_id: int):
     await TaskRepository.delete_task(event_id)
     return event
 
+# В router.py изменим проверку при регистрации
 @router.post("/api/events/{event_id}/register", response_model=STask)
 async def register_for_event(event_id: int, user_id: str):
     events = await TaskRepository.get_tasks()
@@ -65,6 +66,15 @@ async def register_for_event(event_id: int, user_id: str):
         raise HTTPException(status_code=400, detail="User already registered for this event")
     if len(event.participants) >= event.maxParticipants:
         raise HTTPException(status_code=400, detail="Event is full")
+    
+    # Получаем данные пользователя
+    user = await TaskRepository.get_user(user_id)
+    if not user:
+        raise HTTPException(status_code=400, detail="User not found")
+    
+    # Проверяем тип мероприятия (если не 'all', то проверяем соответствие типов)
+    if event.type != 'all' and user.get('type') != event.type:
+        raise HTTPException(status_code=400, detail="Event type doesn't match user type")
     
     event.participants.append(user_id)
     await TaskRepository.update_task(event_id, event)
