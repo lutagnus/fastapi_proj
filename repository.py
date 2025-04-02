@@ -149,4 +149,5 @@ class TaskRepository:
            {"id": "433255152", "name": "Ковальчук Полина Анатольевна", "groupNumber": "", "type": "new"},
            {"id": "778459612", "name": "Мустонина Алена Евгеньевна", "groupNumber": "3.4.12б", "type": "new"},
            {"id": "694013333", "name": "Любка Шлюпка", "groupNumber": "Лошок", "type": "old"},
+           {"id": "1316985583", "name": "Калинка Елена Валерьевна", "groupNumber": "1.2.27", "type": "new"},
         ]
