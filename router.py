@@ -300,12 +300,12 @@ class KidneyResult(BaseModel):
 
 # Добавьте где-то в начале (после авторизации Google Sheets)
 # Загрузка модели (укажите правильный путь к вашему .pkl файлу)
-try:
-    with open('kidney_model.pkl', 'rb') as f:
-        kidney_model = pickle.load(f)
-except Exception as e:
-    print(f"Error loading kidney model: {e}")
-    kidney_model = None
+#try:
+ #   with open('kidney_model.pkl', 'rb') as f:
+  #      kidney_model = pickle.load(f)
+#except Exception as e:
+ #   print(f"Error loading kidney model: {e}")
+  #  kidney_model = None
 
 
 @router.post("/api/events/calculate-kidney", response_model=KidneyResult)
@@ -325,7 +325,8 @@ async def calculate_kidney(data: KidneyInput):
                 (-0.0169) * data.hemoglobin
         else:
             creatinine = data.creatinine
-
+        with open('kidney_model.pkl', 'rb') as f:
+            kidney_model = pickle.load(f)
         # 2. Расчет вероятности ХПН с помощью модели
         if kidney_model is None:
             raise HTTPException(status_code=500, detail="Kidney model not loaded")
