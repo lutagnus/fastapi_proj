@@ -281,7 +281,6 @@ async def receive_data(
 #-----------------------------------------
 class KidneyInput(BaseModel):
     age: float
-    gender: int  # 1 - male, 0 - female
     blood_pressure: float
     specific_gravity: float
     albumin: float
@@ -334,7 +333,6 @@ async def calculate_kidney(data: KidneyInput):
         # Подготовка данных для модели (должно соответствовать формату, на котором обучалась модель)
         input_data = np.array([
             data.age,
-            data.gender,
             data.blood_pressure,
             data.specific_gravity,
             data.albumin,
