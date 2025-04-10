@@ -9,6 +9,10 @@ import os
 import requests
 import gspread
 from google.oauth2.service_account import Credentials
+# ----------------------------------
+import pickle
+import numpy as np
+from pydantic import BaseModel
 
 # Авторизация для Google Sheets
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
@@ -272,5 +276,99 @@ async def receive_data(
         # Отправляем сообщение об ошибке в Telegram
         send_telegram_message(f"Ошибка: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+#-----------------------------------------
+class KidneyInput(BaseModel):
+    age: float
+    gender: int  # 1 - male, 0 - female
+    blood_pressure: float
+    specific_gravity: float
+    albumin: float
+    urea: float
+    sodium: float
+    sugar: float = 0
+    potassium: float = 0
+    hemoglobin: float = 0
+    creatinine: float = None
+
+class KidneyResult(BaseModel):
+    creatinine_level: float
+    ckd_probability: float
+    risk_class: str
+    recommendations: str
+
+# Добавьте где-то в начале (после авторизации Google Sheets)
+# Загрузка модели (укажите правильный путь к вашему .pkl файлу)
+try:
+    with open('kidney_model.pkl', 'rb') as f:
+        kidney_model = pickle.load(f)
+except Exception as e:
+    print(f"Error loading kidney model: {e}")
+    kidney_model = None
+
+
+@router.post("/api/calculate-kidney", response_model=KidneyResult)
+async def calculate_kidney(data: KidneyInput):
+    try:
+        # 1. Расчет креатинина (ваша формула)
+        if data.creatinine is None:
+            creatinine = 18.8995 + \
+                0.0011 * data.age + \
+                0.0045 * data.blood_pressure + \
+                (-16.9356) * data.specific_gravity + \
+                0.0845 * data.albumin + \
+                0.0058 * data.sugar + \
+                0.0064 * data.urea + \
+                (-0.0095) * data.sodium + \
+                0.017 * data.potassium + \
+                (-0.0169) * data.hemoglobin
+        else:
+            creatinine = data.creatinine
+
+        # 2. Расчет вероятности ХПН с помощью модели
+        if kidney_model is None:
+            raise HTTPException(status_code=500, detail="Kidney model not loaded")
+        
+        # Подготовка данных для модели (должно соответствовать формату, на котором обучалась модель)
+        input_data = np.array([
+            data.age,
+            data.gender,
+            data.blood_pressure,
+            data.specific_gravity,
+            data.albumin,
+            data.urea,
+            data.sodium,
+            data.sugar,
+            data.potassium,
+            data.hemoglobin,
+            creatinine
+        ]).reshape(1, -1)
+        
+        # Получение вероятности
+        probability = kidney_model.predict_proba(input_data)[0][1] * 100  # Вероятность класса 1 (ХПН)
+        probability = round(probability, 1)
+        
+        # Определение класса риска
+        if probability < 30:
+            risk_class = "Низкий"
+            recommendations = "Риск ХПН низкий. Рекомендуется контроль показателей через 6-12 месяцев."
+        elif probability < 60:
+            risk_class = "Средний"
+            recommendations = "Умеренный риск ХПН. Рекомендуется консультация нефролога."
+        else:
+            risk_class = "Высокий"
+            recommendations = "Высокий риск ХПН. Необходима срочная консультация специалиста."
+        
+        return {
+            "creatinine_level": round(creatinine, 2),
+            "ckd_probability": probability,
+            "risk_class": risk_class,
+            "recommendations": recommendations
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 # Подключение роутера к основному приложению
 app.include_router(router)
