@@ -308,7 +308,7 @@ except Exception as e:
     kidney_model = None
 
 
-@router.post("/api/calculate-kidney", response_model=KidneyResult)
+@router.post("/api/events/calculate-kidney", response_model=KidneyResult)
 async def calculate_kidney(data: KidneyInput):
     try:
         # 1. Расчет креатинина (ваша формула)
